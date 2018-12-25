@@ -27,7 +27,6 @@ namespace CoreApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegister)
         {
-
             userForRegister.Username = userForRegister.Username.ToLower();
 
             if (await _repo.UserExists(userForRegister.Username))
@@ -76,8 +75,7 @@ namespace CoreApp.API.Controllers
             return Ok(new {
                 token = tokenHandler.WriteToken(token)
             });
+            
         }
-
     }
-
 }
