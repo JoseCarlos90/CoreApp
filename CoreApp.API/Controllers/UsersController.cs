@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreApp.API.Data;
@@ -38,5 +40,21 @@ namespace CoreApp.API.Controllers
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
             return Ok(userToReturn);
         }
+
+       [HttpPut("{id}")]
+       public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForDetailedDto)
+       {
+           if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(id);
+
+            _mapper.Map(userForDetailedDto, userFromRepo);
+
+            if(await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Updating user {id} failed on save");
+       }
     }
 }
