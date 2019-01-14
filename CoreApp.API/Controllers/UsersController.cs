@@ -16,9 +16,9 @@ namespace CoreApp.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IDatingRepository _repo;
+        private readonly ICoreRepository _repo;
         private readonly IMapper _mapper;
-        public UsersController(IDatingRepository repo, IMapper mapper)
+        public UsersController(ICoreRepository repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;

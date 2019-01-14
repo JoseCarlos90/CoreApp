@@ -43,10 +43,11 @@ namespace CoreApp.API
                 });
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DafaultConnection")));
             services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
             services.AddTransient<Seed>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddScoped<ICoreRepository, CoreRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             AddJwtBearer(Options => {
                 Options.TokenValidationParameters = new TokenValidationParameters{

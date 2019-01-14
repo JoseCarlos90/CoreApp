@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoreApp.API.Data;
 using CoreApp.API.Dtos;
 using CoreApp.API.Models;
@@ -18,8 +19,10 @@ namespace CoreApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         public IConfiguration _config { get; }
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _config = config;
             _repo = repo;
         }
@@ -52,7 +55,7 @@ namespace CoreApp.API.Controllers
                 return Unauthorized();
             }
 
-            var claims = new []
+            var claims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, userForRepo.Id.ToString()),
                     new Claim(ClaimTypes.Name, userForRepo.UserName)
@@ -62,7 +65,8 @@ namespace CoreApp.API.Controllers
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor {
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds
@@ -72,10 +76,14 @@ namespace CoreApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {
-                token = tokenHandler.WriteToken(token)
+            var user = _mapper.Map<UserForListDto>(userForRepo);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user
             });
-            
+
         }
     }
 }
