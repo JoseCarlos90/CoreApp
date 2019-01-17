@@ -24,16 +24,19 @@ constructor(private http: HttpClient) { }
   }
 
   login(model: any) {
+    console.log(model);
     return this.http.post(this.baseUrl + 'login', model)
     .pipe(
       map((response: any) => {
         const user = response;
         if (user) {
+          console.log(user);
           localStorage.setItem('token', user.token);
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.decodedToken = user.user;
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          console.log(user.user.photoUrl);
+          this.changeMemberPhoto(user.user.photoUrl);
         }
       })
     );
