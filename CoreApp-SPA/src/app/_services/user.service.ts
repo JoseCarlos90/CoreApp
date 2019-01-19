@@ -15,7 +15,9 @@ export class UserService {
     return this.http.get<User[]>(this.baseUrl + 'users');
   }
 
-  getUser(id): Observable<User> {
+  getUser(id: number): Observable<User> {
+    console.log('Get user del seervice.ts');
+    console.log(id);
     return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 

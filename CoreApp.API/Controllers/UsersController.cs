@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CoreApp.API.Data;
 using CoreApp.API.Dtos;
+using CoreApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
